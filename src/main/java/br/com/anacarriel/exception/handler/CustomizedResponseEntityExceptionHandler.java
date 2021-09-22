@@ -1,7 +1,7 @@
 package br.com.anacarriel.exception.handler;
 
 import br.com.anacarriel.exception.ExceptionResponse;
-import br.com.anacarriel.exception.UnsuportedMathOperationException;
+import br.com.anacarriel.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,7 +26,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(UnsuportedMathOperationException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     public final ResponseEntity<ExceptionResponse> handleBadRequestExceptions(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(
