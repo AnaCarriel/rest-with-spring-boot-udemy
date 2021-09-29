@@ -1,32 +1,23 @@
-package br.com.anacarriel.model;
+package br.com.anacarriel.data.vo;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name="person")
-public class Person implements Serializable {
+public class PersonVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false, length = 80)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
 
-    @Column(nullable = false, length = 100)
     private String address;
 
-    @Column(nullable = false, length = 6)
     private String gender;
 
-    public Person() {
+    public PersonVO() {
     }
 
     public Long getId() {
@@ -72,9 +63,9 @@ public class Person implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Person)) return false;
-        Person person = (Person) o;
-        return getId().equals(person.getId()) && getFirstName().equals(person.getFirstName()) && getLastName().equals(person.getLastName()) && getAddress().equals(person.getAddress()) && getGender().equals(person.getGender());
+        if (!(o instanceof PersonVO)) return false;
+        PersonVO personVo = (PersonVO) o;
+        return getId().equals(personVo.getId()) && getFirstName().equals(personVo.getFirstName()) && getLastName().equals(personVo.getLastName()) && getAddress().equals(personVo.getAddress()) && getGender().equals(personVo.getGender());
     }
 
     @Override
