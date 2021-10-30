@@ -1,44 +1,26 @@
-package br.com.anacarriel.data.model;
+package br.com.anacarriel.data.vo.v2;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity
-@Table(name="person")
-public class Person implements Serializable {
+public class PersonVOV2 implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false, length = 80)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
 
-    @Column(nullable = false, length = 100)
     private String address;
 
-    @Column(nullable = false, length = 6)
     private String gender;
 
-    @Column(nullable = false, length = 6)
     private Date birthDay;
 
-    public Date getBirthDay() {
-        return birthDay;
-    }
-
-    public void setBirthDay(Date birthDay) {
-        this.birthDay = birthDay;
-    }
-
-    public Person() {
+    public PersonVOV2() {
     }
 
     public Long getId() {
@@ -81,12 +63,20 @@ public class Person implements Serializable {
         this.gender = gender;
     }
 
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Person)) return false;
-        Person person = (Person) o;
-        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender()) && Objects.equals(getBirthDay(), person.getBirthDay());
+        if (!(o instanceof PersonVOV2)) return false;
+        PersonVOV2 that = (PersonVOV2) o;
+        return getId().equals(that.getId()) && getFirstName().equals(that.getFirstName()) && getLastName().equals(that.getLastName()) && getAddress().equals(that.getAddress()) && getGender().equals(that.getGender()) && getBirthDay().equals(that.getBirthDay());
     }
 
     @Override
