@@ -1,7 +1,6 @@
 package br.com.anacarriel.services;
 
 import br.com.anacarriel.converter.DozerConverter;
-import br.com.anacarriel.data.vo.PersonVO;
 import br.com.anacarriel.exception.ResourceNotFoundException;
 import br.com.anacarriel.data.model.Person;
 import br.com.anacarriel.repository.PersonRepository;
@@ -22,13 +21,13 @@ public class PersonServices {
         return vo;
     }
 
-    public Person update(PersonVO person){
-        var entity = repository.findById(person.getId()).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+    public Person update(br.com.anacarriel.data.vo.PersonVO personVO){
+        var entity = repository.findById(personVO.getId()).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 
-        entity.setFirstName(person.getFirstName());
-        entity.setLastName(person.getLastName());
-        entity.setAddress(person.getAddress());
-        entity.setGender(person.getGender());
+        entity.setFirstName(personVO.getFirstName());
+        entity.setLastName(personVO.getLastName());
+        entity.setAddress(personVO.getAddress());
+        entity.setGender(personVO.getGender());
 
         var vo =  DozerConverter.parseObject(repository.save(entity), Person.class);
         return vo;
@@ -39,13 +38,13 @@ public class PersonServices {
         repository.delete(entity);
     }
 
-    public PersonVO findeById(Long id){
+    public br.com.anacarriel.data.vo.PersonVO findeById(Long id){
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Norecords found for this ID"));
-        return DozerConverter.parseObject(entity, PersonVO.class);
+        return DozerConverter.parseObject(entity, br.com.anacarriel.data.vo.PersonVO.class);
     }
 
-    public List<PersonVO> findAll(){
-        return DozerConverter.parseListObjects(repository.findAll(), PersonVO.class);
+    public List<br.com.anacarriel.data.vo.PersonVO> findAll(){
+        return DozerConverter.parseListObjects(repository.findAll(), br.com.anacarriel.data.vo.PersonVO.class);
     }
 
 
