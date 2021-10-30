@@ -1,6 +1,7 @@
 package br.com.anacarriel.data.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 public class PersonVO implements Serializable {
@@ -16,6 +17,29 @@ public class PersonVO implements Serializable {
     private String address;
 
     private String gender;
+
+    private Date birthDay;
+
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PersonVO)) return false;
+        PersonVO personVO = (PersonVO) o;
+        return Objects.equals(getId(), personVO.getId()) && Objects.equals(getFirstName(), personVO.getFirstName()) && Objects.equals(getLastName(), personVO.getLastName()) && Objects.equals(getAddress(), personVO.getAddress()) && Objects.equals(getGender(), personVO.getGender()) && Objects.equals(getBirthDay(), personVO.getBirthDay());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), getBirthDay());
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
+    }
 
     public PersonVO() {
     }
@@ -60,16 +84,4 @@ public class PersonVO implements Serializable {
         this.gender = gender;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PersonVO)) return false;
-        PersonVO personVo = (PersonVO) o;
-        return getId().equals(personVo.getId()) && getFirstName().equals(personVo.getFirstName()) && getLastName().equals(personVo.getLastName()) && getAddress().equals(personVo.getAddress()) && getGender().equals(personVo.getGender());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender());
-    }
 }
