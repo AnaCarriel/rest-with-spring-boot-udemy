@@ -1,7 +1,7 @@
 package br.com.anacarriel.converter;
 
 import br.com.anacarriel.converter.mocks.MockPerson;
-import br.com.anacarriel.data.vo.PersonVO;
+import br.com.anacarriel.data.vo.v1.PersonVO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

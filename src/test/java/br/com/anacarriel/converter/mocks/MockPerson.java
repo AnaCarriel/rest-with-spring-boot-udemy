@@ -1,6 +1,6 @@
 package br.com.anacarriel.converter.mocks;
 
-import br.com.anacarriel.data.vo.PersonVO;
+import br.com.anacarriel.data.vo.v1.PersonVO;
 
 import java.util.ArrayList;
 import java.util.List;
