@@ -1,6 +1,7 @@
 package br.com.anacarriel.services;
 
 import br.com.anacarriel.converter.DozerConverter;
+import br.com.anacarriel.data.vo.v1.PersonVO;
 import br.com.anacarriel.exception.ResourceNotFoundException;
 import br.com.anacarriel.data.model.Person;
 import br.com.anacarriel.repository.PersonRepository;
@@ -21,7 +22,7 @@ public class PersonServices {
         return vo;
     }
 
-    public Person update(br.com.anacarriel.data.vo.PersonVO personVO){
+    public Person update(PersonVO personVO){
         var entity = repository.findById(personVO.getId()).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 
         entity.setFirstName(personVO.getFirstName());
@@ -38,13 +39,13 @@ public class PersonServices {
         repository.delete(entity);
     }
 
-    public br.com.anacarriel.data.vo.PersonVO findeById(Long id){
+    public PersonVO findeById(Long id){
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Norecords found for this ID"));
-        return DozerConverter.parseObject(entity, br.com.anacarriel.data.vo.PersonVO.class);
+        return DozerConverter.parseObject(entity, PersonVO.class);
     }
 
-    public List<br.com.anacarriel.data.vo.PersonVO> findAll(){
-        return DozerConverter.parseListObjects(repository.findAll(), br.com.anacarriel.data.vo.PersonVO.class);
+    public List<PersonVO> findAll(){
+        return DozerConverter.parseListObjects(repository.findAll(), PersonVO.class);
     }
 
 
