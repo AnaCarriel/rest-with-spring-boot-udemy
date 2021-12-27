@@ -16,13 +16,13 @@ public class PersonServices {
     @Autowired
     PersonRepository repository;
 
-    public Person create(Person person){
+    public PersonVO create(PersonVO person){
         var entity = DozerConverter.parseObject(person, Person.class);
-        var vo = DozerConverter.parseObject(repository.save(entity), Person.class);
+        var vo = DozerConverter.parseObject(repository.save(entity), PersonVO.class);
         return vo;
     }
 
-    public Person update(PersonVO personVO){
+    public PersonVO update(PersonVO personVO){
         var entity = repository.findById(personVO.getId()).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 
         entity.setFirstName(personVO.getFirstName());
@@ -30,7 +30,7 @@ public class PersonServices {
         entity.setAddress(personVO.getAddress());
         entity.setGender(personVO.getGender());
 
-        var vo =  DozerConverter.parseObject(repository.save(entity), Person.class);
+        var vo =  DozerConverter.parseObject(repository.save(entity), PersonVO.class);
         return vo;
     }
 
@@ -39,12 +39,12 @@ public class PersonServices {
         repository.delete(entity);
     }
 
-    public PersonVO findeById(Long id){
+    public PersonVO findById(Long id){
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Norecords found for this ID"));
         return DozerConverter.parseObject(entity, PersonVO.class);
     }
 
-    public List<PersonVO> findAll(){
+    public List<PersonVO> findAll() {
         return DozerConverter.parseListObjects(repository.findAll(), PersonVO.class);
     }
 
