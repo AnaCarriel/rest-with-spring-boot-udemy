@@ -34,6 +34,9 @@ public class Person implements Serializable {
         return birthDay;
     }
 
+    public Person() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,8 +54,7 @@ public class Person implements Serializable {
         this.birthDay = birthDay;
     }
 
-    public Person() {
-    }
+
 
     public Long getId() {
         return id;

@@ -8,22 +8,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-@JsonPropertyOrder({"id","address", "first_name", "last_name", "gender"})
 public class PersonVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    @JsonProperty("first_name")
     private String firstName;
 
-    @JsonProperty("last_name")
     private String lastName;
 
     private String address;
 
-    @JsonIgnore
     private String gender;
 
     private Date birthDay;
@@ -42,7 +38,15 @@ public class PersonVO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), getBirthDay());
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((address == null) ? 0 : address.hashCode());
+        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + ((gender == null) ? 0 : gender.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((birthDay == null) ? 0 : birthDay.hashCode());
+        return result;
     }
 
     public void setBirthDay(Date birthDay) {
