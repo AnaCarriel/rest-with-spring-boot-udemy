@@ -22,13 +22,14 @@ public class PersonServices {
         return vo;
     }
 
-    public PersonVO update(PersonVO personVO){
-        var entity = repository.findById(personVO.getId()).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+    public PersonVO update(PersonVO person){
+        var entity = repository.findById(person.getKey())
+                .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 
-        entity.setFirstName(personVO.getFirstName());
-        entity.setLastName(personVO.getLastName());
-        entity.setAddress(personVO.getAddress());
-        entity.setGender(personVO.getGender());
+        entity.setFirstName(person.getFirstName());
+        entity.setLastName(person.getLastName());
+        entity.setAddress(person.getAddress());
+        entity.setGender(person.getGender());
 
         var vo =  DozerConverter.parseObject(repository.save(entity), PersonVO.class);
         return vo;
