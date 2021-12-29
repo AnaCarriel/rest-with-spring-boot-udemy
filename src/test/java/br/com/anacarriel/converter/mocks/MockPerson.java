@@ -1,12 +1,16 @@
 package br.com.anacarriel.converter.mocks;
 
+import br.com.anacarriel.data.model.Person;
 import br.com.anacarriel.data.vo.v1.PersonVO;
 
+import javax.xml.crypto.Data;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MockPerson {
-    public PersonVO mockEntity() {
+
+    public Person mockEntity() {
         return mockEntity(0);
     }
 
@@ -14,8 +18,8 @@ public class MockPerson {
         return mockVO(0);
     }
 
-    public List<PersonVO> mockEntityList() {
-        List<PersonVO> persons = new ArrayList<PersonVO>();
+    public List<Person> mockEntityList() {
+        List<Person> persons = new ArrayList<Person>();
         for (int i = 0; i < 14; i++) {
             persons.add(mockEntity(i));
         }
@@ -30,13 +34,14 @@ public class MockPerson {
         return persons;
     }
 
-    private PersonVO mockEntity(Integer number) {
-        PersonVO person = new PersonVO();
+    private Person mockEntity(Integer number) {
+        Person person = new Person();
         person.setAddress("Addres Test" + number);
         person.setFirstName("First Name Test" + number);
         person.setGender(((number % 2)==0) ? "Male" : "Female");
         person.setId(number.longValue());
         person.setLastName("Last Name Test" + number);
+        person.setBirthDay(new Date(1196-10-25));
         return person;
     }
 
@@ -45,8 +50,9 @@ public class MockPerson {
         person.setAddress("Addres Test" + number);
         person.setFirstName("First Name Test" + number);
         person.setGender(((number % 2)==0) ? "Male" : "Female");
-        person.setId(number.longValue());
+        person.setKey(number.longValue());
         person.setLastName("Last Name Test" + number);
+        person.setBirthDay(new Date(1196-10-25));
         return person;
     }
 }
