@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Table(name="person")
@@ -11,22 +12,34 @@ public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Schema(description = "Unique identifier of the Contact.",
+            example = "1", required = true)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "First name of person.",
+            example = "Ana", required = true)
     @Column(name = "first_name", nullable = false, length = 80)
     private String firstName;
 
+    @Schema(description = "Last name of person.",
+            example = "Carriel", required = true)
     @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
 
+    @Schema(description = "Adress of person.",
+            example = "Rua major mariano", required = true)
     @Column(nullable = false, length = 100)
     private String address;
 
+    @Schema(description = "Gender of person.",
+            example = "female", required = true)
     @Column(nullable = false, length = 6)
     private String gender;
 
+    @Schema(description = "Birthday name of person.",
+            example = "10-03-1996", required = true)
     @Column(nullable = false, length = 11)
     private Date birthDay;
 
