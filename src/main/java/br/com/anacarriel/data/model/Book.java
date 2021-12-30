@@ -1,5 +1,7 @@
 package br.com.anacarriel.data.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -11,29 +13,40 @@ public class Book implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Schema(description = "Unique identifier of the Contact.",
+            example = "1", required = true)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private long id;
 
+    @Schema(description = "Name author of the book.",
+            example = "Tarcila do amaral", required = true)
     @Column(name = "author", nullable = false, length = 80)
-    String author;
+    private String author;
 
+    @Schema(description = "Lauch date of the book.",
+            example = "1", required = true)
     @Column(name = "lauchDate", nullable = false, length = 11)
-    Date lauch_date;
+    private Date lauch_date;
 
+    @Schema(description = "Price of the Book.",
+            example = "1", required = true)
     @Column(name = "price", nullable = false, length = 80)
-    float price;
+    private float price;
 
+    @Schema(description = "Title of the Book.",
+            example = "1", required = true)
     @Column(name = "title", nullable = false, length = 80)
-    String title;
+    private String title;
 
     public Book(){}
 
-    public int getId() {
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
