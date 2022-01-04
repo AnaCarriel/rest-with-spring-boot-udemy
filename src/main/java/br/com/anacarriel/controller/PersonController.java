@@ -19,7 +19,6 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-
 @RestController
 @RequestMapping("/api/person/v1")
 @Tag(name = "person", description = "The Person Registration API")
