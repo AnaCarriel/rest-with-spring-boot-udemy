@@ -5,7 +5,9 @@ import br.com.anacarriel.repository.UserRepository;
 import br.com.anacarriel.security.AccountCredentialsVO;
 import br.com.anacarriel.security.jwt.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,9 +36,9 @@ public class AuthController {
     UserRepository repository;
 
     @Operation(summary = "Authenticate a user by credentials")
-    @PostMapping(value = "/signin", produces = { "application/json", "application/xml", "application/x-yaml" },
-            consumes = { "application/json", "application/xml", "application/x-yaml" })
-    public ResponseEntity create(@RequestBody AccountCredentialsVO data){
+    @PostMapping(value = "/signin", produces = {"application/json", "application/xml", "application/x-yaml"},
+            consumes = {"application/json", "application/xml", "application/x-yaml"})
+    public ResponseEntity create(@RequestBody AccountCredentialsVO data) {
         try {
             var username = data.getUsername();
             var password = data.getPassword();
@@ -48,19 +49,18 @@ public class AuthController {
 
             var token = "";
 
-            if(user != null){
+            if (user != null) {
                 token = tokenProvider.createToken(username, user.getRoles());
-            }else {
-                throw  new UserPrincipalNotFoundException("Username" + username + "not found");
+            } else {
+                throw new UsernameNotFoundException("Username " + username + " not found!");
             }
 
-            Map< Object, Object> model = new HashMap<>();
+            Map<Object, Object> model = new HashMap<>();
             model.put("username", username);
-            model.put("password", password);
+            model.put("token", token);
             return ok(model);
-        }catch (Exception e){
-            throw  new BadCredentialsException("Invalid username/ password supplied");
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Invalid username/password supplied!");
         }
     }
-
-    }
+}

@@ -16,8 +16,6 @@ public class User implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -35,8 +33,8 @@ public class User implements UserDetails, Serializable {
     @Column(name = "account_non_expired")
     private Boolean accountNonExpired;
 
-    @Column(name = "credentials_non_locked")
-    private Boolean credentialsNonLoked;
+    @Column(name = "account_non_locked")
+    private Boolean accountNonLocked;
 
     @Column(name = "credentials_non_expired")
     private Boolean credentialsNonExpired;
@@ -44,55 +42,25 @@ public class User implements UserDetails, Serializable {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    //Para vincular as tabelas user_permission, USER e a PERMISSION, mapeamento de muitos para muitos
-    @ManyToMany(fetch = FetchType.EAGER) //sempre vai trazer
-    @JoinTable(name = "user_permission", joinColumns = {@JoinColumn (name = "id_user")},
-    inverseJoinColumns = { @JoinColumn (name = "id_permission")})
-    private List<Permission> permissionList;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_permission", joinColumns = { @JoinColumn (name = "id_user") },
+            inverseJoinColumns = { @JoinColumn (name = "id_permission")})
+    private List<Permission> permissions;
 
-    //aqui vai buscas as regras de cada id permissão
-    public List<String> getRoles(){
+    public List<String> getRoles() {
         List<String> roles = new ArrayList<>();
-        for (Permission permission: this.permissionList) {
+        for (Permission permission : this.permissions) {
             roles.add(permission.getDescription());
-            
         }
         return roles;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.permissionList;
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public String getPassword() {
-       return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.userName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return this.accountNonExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return this.credentialsNonLoked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return this.credentialsNonExpired;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUserName() {
@@ -111,10 +79,6 @@ public class User implements UserDetails, Serializable {
         this.fullName = fullName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Boolean getAccountNonExpired() {
         return accountNonExpired;
     }
@@ -123,12 +87,12 @@ public class User implements UserDetails, Serializable {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public Boolean getCredentialsNonLoked() {
-        return credentialsNonLoked;
+    public Boolean getAccountNonLocked() {
+        return accountNonLocked;
     }
 
-    public void setCredentialsNonLoked(Boolean credentialsNonLoked) {
-        this.credentialsNonLoked = credentialsNonLoked;
+    public void setAccountNonLocked(Boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
     public Boolean getCredentialsNonExpired() {
@@ -147,24 +111,123 @@ public class User implements UserDetails, Serializable {
         this.enabled = enabled;
     }
 
-    public List<Permission> getPermissionList() {
-        return permissionList;
+    public List<Permission> getPermissions() {
+        return permissions;
     }
 
-    public void setPermissionList(List<Permission> permissionList) {
-        this.permissionList = permissionList;
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(getUserName(), user.getUserName()) && Objects.equals(getFullName(), user.getFullName()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(isAccountNonExpired(), user.isAccountNonExpired()) && Objects.equals(getCredentialsNonLoked(), user.getCredentialsNonLoked()) && Objects.equals(isCredentialsNonExpired(), user.isCredentialsNonExpired()) && Objects.equals(isEnabled(), user.isEnabled()) && Objects.equals(getPermissionList(), user.getPermissionList());
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.permissions;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, getUserName(), getFullName(), getPassword(), isAccountNonExpired(), getCredentialsNonLoked(), isCredentialsNonExpired(), isEnabled(), getPermissionList());
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((accountNonExpired == null) ? 0 : accountNonExpired.hashCode());
+        result = prime * result + ((accountNonLocked == null) ? 0 : accountNonLocked.hashCode());
+        result = prime * result + ((credentialsNonExpired == null) ? 0 : credentialsNonExpired.hashCode());
+        result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
+        result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((permissions == null) ? 0 : permissions.hashCode());
+        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (accountNonExpired == null) {
+            if (other.accountNonExpired != null)
+                return false;
+        } else if (!accountNonExpired.equals(other.accountNonExpired))
+            return false;
+        if (accountNonLocked == null) {
+            if (other.accountNonLocked != null)
+                return false;
+        } else if (!accountNonLocked.equals(other.accountNonLocked))
+            return false;
+        if (credentialsNonExpired == null) {
+            if (other.credentialsNonExpired != null)
+                return false;
+        } else if (!credentialsNonExpired.equals(other.credentialsNonExpired))
+            return false;
+        if (enabled == null) {
+            if (other.enabled != null)
+                return false;
+        } else if (!enabled.equals(other.enabled))
+            return false;
+        if (fullName == null) {
+            if (other.fullName != null)
+                return false;
+        } else if (!fullName.equals(other.fullName))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (password == null) {
+            if (other.password != null)
+                return false;
+        } else if (!password.equals(other.password))
+            return false;
+        if (permissions == null) {
+            if (other.permissions != null)
+                return false;
+        } else if (!permissions.equals(other.permissions))
+            return false;
+        if (userName == null) {
+            if (other.userName != null)
+                return false;
+        } else if (!userName.equals(other.userName))
+            return false;
+        return true;
     }
 }
