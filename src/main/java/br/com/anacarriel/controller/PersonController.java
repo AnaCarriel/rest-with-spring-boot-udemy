@@ -41,6 +41,21 @@ public class PersonController {
         return personVO;
     }
 
+    @Operation(summary = "Disebla person by id", description = "Disebla by ID format", tags = { "person" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Person.class)))),
+            @ApiResponse(responseCode = "404", description = "Person not found") })
+    @PatchMapping(value = "/disablePerson/{id}", produces = { "application/json", "application/xml", "application/x-yaml" })
+    public PersonVO disablePerson(
+            @Parameter(description="Disable person by id.", required=true)
+            @PathVariable("id") Long id, @RequestBody PersonVO person) {
+        Boolean enabled = person.getEnabled();
+        PersonVO personVO = service.disablePerson(id, enabled);
+        personVO.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        return personVO;
+    }
+
     @Operation(summary = "Find all persons", description = "Persons search format", tags = { "person" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation",
