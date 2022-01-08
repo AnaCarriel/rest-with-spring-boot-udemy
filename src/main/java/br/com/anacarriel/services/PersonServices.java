@@ -7,6 +7,7 @@ import br.com.anacarriel.data.model.Person;
 import br.com.anacarriel.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,6 +42,13 @@ public class PersonServices {
     }
 
     public PersonVO findById(Long id){
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Norecords found for this ID"));
+        return DozerConverter.parseObject(entity, PersonVO.class);
+    }
+
+    @Transactional
+    public PersonVO disablePerson(Long id, Boolean enabled){
+        repository.disablePersons(id, enabled);
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Norecords found for this ID"));
         return DozerConverter.parseObject(entity, PersonVO.class);
     }
