@@ -38,6 +38,11 @@ public class Person implements Serializable {
     @Column(nullable = false, length = 6)
     private String gender;
 
+    @Schema(description = "Enabled",
+            example = "true or false", required = false)
+    @Column(nullable = false)
+    private Boolean enabled;
+
     @Schema(description = "Birthday name of person.",
             example = "10-03-1996", required = true)
     @Column(nullable = false, length = 11)
@@ -50,17 +55,12 @@ public class Person implements Serializable {
     public Person() {
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Person)) return false;
-        Person person = (Person) o;
-        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender()) && Objects.equals(getBirthDay(), person.getBirthDay());
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), getBirthDay());
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setBirthDay(Date birthDay) {
@@ -109,4 +109,16 @@ public class Person implements Serializable {
         this.gender = gender;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender()) && Objects.equals(getEnabled(), person.getEnabled()) && Objects.equals(getBirthDay(), person.getBirthDay());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), getEnabled(), getBirthDay());
+    }
 }
