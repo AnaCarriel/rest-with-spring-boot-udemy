@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-@JsonPropertyOrder({"id", "author", "lauchDate", "price", "title"})
+@JsonPropertyOrder({"id", "author", "launchDate", "price", "title"})
 public class BookVO extends RepresentationModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -18,7 +18,7 @@ public class BookVO extends RepresentationModel implements Serializable {
     @JsonProperty("id")
     private Long key;
     private String author;
-    private Date lauchDate;
+    private Date launchDate;
     private float price;
     private String title;
 
@@ -40,12 +40,12 @@ public class BookVO extends RepresentationModel implements Serializable {
         this.author = author;
     }
 
-    public Date getLauchDate() {
-        return lauchDate;
+    public Date getLaunchDate() {
+        return launchDate;
     }
 
-    public void setLauchDate(Date lauchDate) {
-        this.lauchDate = lauchDate;
+    public void setLaunchDate(Date launchDate) {
+        this.launchDate = launchDate;
     }
 
     public float getPrice() {
@@ -70,11 +70,11 @@ public class BookVO extends RepresentationModel implements Serializable {
         if (!(o instanceof BookVO)) return false;
         if (!super.equals(o)) return false;
         BookVO bookVO = (BookVO) o;
-        return Float.compare(bookVO.getPrice(), getPrice()) == 0 && Objects.equals(getKey(), bookVO.getKey()) && Objects.equals(getAuthor(), bookVO.getAuthor()) && Objects.equals(getLauchDate(), bookVO.getLauchDate()) && Objects.equals(getTitle(), bookVO.getTitle());
+        return Float.compare(bookVO.getPrice(), getPrice()) == 0 && Objects.equals(getKey(), bookVO.getKey()) && Objects.equals(getAuthor(), bookVO.getAuthor()) && Objects.equals(getLaunchDate(), bookVO.getLaunchDate()) && Objects.equals(getTitle(), bookVO.getTitle());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getKey(), getAuthor(), getLauchDate(), getPrice(), getTitle());
+        return Objects.hash(super.hashCode(), getKey(), getAuthor(), getLaunchDate(), getPrice(), getTitle());
     }
 }

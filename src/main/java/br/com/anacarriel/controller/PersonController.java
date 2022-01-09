@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -68,23 +69,41 @@ public class PersonController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Person.class)))),
             @ApiResponse(responseCode = "404", description = "Persons not found")})
     @GetMapping(produces = { "application/json", "application/xml", "application/x-yaml" })
-    public ResponseEntity<PagedResourcesAssembler<PersonVO>> findAll(
+    public ResponseEntity<PagedModel<?>> findAll(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "limit", defaultValue = "12") int limit,
             @RequestParam(value = "direction", defaultValue = "asc") String direction,
-            PagedResourcesAssembler assembler){
+            PagedResourcesAssembler<PersonVO> pagedResourcesAssembler){
 
-        var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        var sort = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(sort, "firstName"));
 
-        Page<PersonVO> persons =  service.findAll(pageable);
-        persons
-                .forEach(p -> p.add(
-                        linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()
-                    )
-                );
-        return new ResponseEntity<PagedResourcesAssembler<PersonVO>>(assembler.toModel(persons), HttpStatus.OK);
+        Page<PersonVO> persons = service.findAll(pageable);
+        persons.forEach(p -> p.add(linkTo(methodOn(this.getClass()).findById(p.getKey())).withSelfRel()));
+        return ResponseEntity.ok(pagedResourcesAssembler.toModel(persons));
+    }
+
+    @Operation(summary = "Find person By Name", description = "Persons search format", tags = { "person" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Person.class)))),
+            @ApiResponse(responseCode = "404", description = "Persons not found")})
+    @GetMapping(value= "/findByName/{firstName}",produces = { "application/json", "application/xml", "application/x-yaml" })
+    public ResponseEntity<PagedModel<?>> findPersonByName(
+            @PathVariable("firstName") String firstName,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "12") int limit,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction,
+            PagedResourcesAssembler<PersonVO> pagedResourcesAssembler){
+
+        var sort = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(sort, "firstName"));
+
+        Page<PersonVO> persons = service.findPersonByName(firstName, pageable);
+        persons.forEach(p -> p.add(linkTo(methodOn(this.getClass()).findById(p.getKey())).withSelfRel()));
+        return ResponseEntity.ok(pagedResourcesAssembler.toModel(persons));
     }
 
     @Operation(summary = "Create person", description = "Create person, inform: first and last name, etc", tags = { "person" })

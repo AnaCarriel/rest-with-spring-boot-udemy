@@ -24,10 +24,10 @@ public class Book implements Serializable {
     @Column(name = "author", nullable = false, length = 80)
     private String author;
 
-    @Schema(description = "Lauch date of the book.",
+    @Schema(description = "Launch date of the book.",
             example = "1", required = true)
-    @Column(name = "lauchDate", nullable = false, length = 11)
-    private Date lauch_date;
+    @Column(name = "launchDate", nullable = false, length = 6)
+    private Date launch_date;
 
     @Schema(description = "Price of the Book.",
             example = "1", required = true)
@@ -58,12 +58,12 @@ public class Book implements Serializable {
         this.author = author;
     }
 
-    public Date getLauch_date() {
-        return lauch_date;
+    public Date getLaunch_date() {
+        return launch_date;
     }
 
-    public void setLauch_date(Date lauch_date) {
-        this.lauch_date = lauch_date;
+    public void setLaunch_date(Date launch_date) {
+        this.launch_date = launch_date;
     }
 
     public float getPrice() {
@@ -87,11 +87,11 @@ public class Book implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Book)) return false;
         Book book = (Book) o;
-        return getId() == book.getId() && Float.compare(book.getPrice(), getPrice()) == 0 && Objects.equals(getAuthor(), book.getAuthor()) && Objects.equals(getLauch_date(), book.getLauch_date()) && Objects.equals(getTitle(), book.getTitle());
+        return getId() == book.getId() && Float.compare(book.getPrice(), getPrice()) == 0 && Objects.equals(getAuthor(), book.getAuthor()) && Objects.equals(getLaunch_date(), book.getLaunch_date()) && Objects.equals(getTitle(), book.getTitle());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getAuthor(), getLauch_date(), getPrice(), getTitle());
+        return Objects.hash(getId(), getAuthor(), getLaunch_date(), getPrice(), getTitle());
     }
 }
