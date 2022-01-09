@@ -37,7 +37,7 @@ public class MockBook {
         Book book = new Book();
         book.setTitle("Rosas dos ventos" + number);
         book.setAuthor("Ana Maria Machado" + number);
-        book.setLauch_date(new Date(1196-10-25));
+        book.setLaunch_date(new Date(1196-10-25));
         book.setId(number.longValue());
         book.setPrice(123 + number);
         return book;
@@ -47,7 +47,7 @@ public class MockBook {
         BookVO book = new BookVO();
         book.setTitle("Rosas dos ventos" + number);
         book.setAuthor("Ana Maria Machado" + number);
-        book.setLauchDate(new Date(1196-10-25));
+        book.setLaunchDate(new Date(1196-10-25));
         book.setKey(number.longValue());
         book.setPrice(123 + number);
         return book;
