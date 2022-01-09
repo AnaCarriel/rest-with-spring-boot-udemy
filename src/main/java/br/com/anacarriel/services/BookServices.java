@@ -6,9 +6,9 @@ import br.com.anacarriel.data.vo.v1.BookVO;
 import br.com.anacarriel.exception.ResourceNotFoundException;
 import br.com.anacarriel.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class BookServices {
@@ -27,8 +27,12 @@ public class BookServices {
         return DozerConverter.parseObject(entity, BookVO.class);
     }
 
-    public List<BookVO> findAll() {
-        return DozerConverter.parseListObjects(repository.findAll(), BookVO.class);
+    public Page<BookVO> findAll(Pageable pageable) {
+        var page = repository.findAll(pageable);
+        return page.map(this::convertToBook);
+    }
+    private BookVO convertToBook(Book entity){
+        return DozerConverter.parseObject(entity, BookVO.class);
     }
 
     public void delete (long id){
@@ -43,7 +47,7 @@ public class BookServices {
         entity.setAuthor(book.getAuthor());
         entity.setPrice(book.getPrice());
         entity.setTitle(book.getTitle());
-        entity.setLauch_date(book.getLauchDate());
+        entity.setLaunch_date(book.getLaunchDate());
 
         var vo =  DozerConverter.parseObject(repository.save(entity), BookVO.class);
         return vo;

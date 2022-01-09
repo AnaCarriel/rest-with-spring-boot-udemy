@@ -2,6 +2,7 @@ package br.com.anacarriel.controller;
 
 import br.com.anacarriel.data.model.Book;
 import br.com.anacarriel.data.vo.v1.BookVO;
+import br.com.anacarriel.data.vo.v1.PersonVO;
 import br.com.anacarriel.services.BookServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,6 +13,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,15 +55,19 @@ public class BookController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Book.class)))),
             @ApiResponse(responseCode = "404", description = "Persons not found")})
     @GetMapping(produces = { "application/json", "application/xml", "application/x-yaml" })
-    public List<BookVO> findAll() {
+    public ResponseEntity<PagedModel<?>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "12") int limit,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction,
+            PagedResourcesAssembler<BookVO> pagedResourcesAssembler){
 
-        List<BookVO> books =  service.findAll();
-        books
-                .forEach(p -> p.add(
-                                linkTo(methodOn(BookController.class).findById(p.getKey())).withSelfRel()
-                        )
-                );
-        return books;
+        var sort = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(sort, "title"));
+
+        Page<BookVO> books = service.findAll(pageable);
+        books.forEach(p -> p.add(linkTo(methodOn(this.getClass()).findById(p.getKey())).withSelfRel()));
+        return ResponseEntity.ok(pagedResourcesAssembler.toModel(books));
     }
 
     @Operation(summary = "Create book", description = "Create book, inform: first and last name, etc", tags = { "book" })
@@ -68,7 +79,7 @@ public class BookController {
     public BookVO create(@Parameter(description="Contact to add. Cannot null or empty.",
             required=true) @RequestBody BookVO book) {
         BookVO bookVO = service.create(book);
-        bookVO.add(linkTo(methodOn(PersonController.class).findById(bookVO.getKey())).withSelfRel());
+        bookVO.add(linkTo(methodOn(BookController.class).findById(bookVO.getKey())).withSelfRel());
         return bookVO;
     }
 
@@ -81,7 +92,7 @@ public class BookController {
     public BookVO update(@RequestBody BookVO book) {
 
         BookVO bookVO = service.update(book);
-        bookVO.add(linkTo(methodOn(PersonController.class).findById(bookVO.getKey())).withSelfRel());
+        bookVO.add(linkTo(methodOn(BookController.class).findById(bookVO.getKey())).withSelfRel());
         return bookVO;
     }
 
