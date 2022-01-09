@@ -6,6 +6,8 @@ import br.com.anacarriel.exception.ResourceNotFoundException;
 import br.com.anacarriel.data.model.Person;
 import br.com.anacarriel.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,9 +55,12 @@ public class PersonServices {
         return DozerConverter.parseObject(entity, PersonVO.class);
     }
 
-    public List<PersonVO> findAll() {
-        return DozerConverter.parseListObjects(repository.findAll(), PersonVO.class);
+    public Page<PersonVO> findAll(Pageable pageable) {
+        var page = repository.findAll(pageable);
+        return page.map(this::convertToPerson);
     }
 
-
+    private PersonVO convertToPerson(Person entity){
+        return DozerConverter.parseObject(entity, PersonVO.class);
+    }
 }

@@ -4,7 +4,14 @@ import br.com.anacarriel.data.model.Person;
 import br.com.anacarriel.data.vo.v1.PersonVO;
 import br.com.anacarriel.services.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,8 +57,7 @@ public class PersonController {
     public PersonVO disablePerson(
             @Parameter(description="Disable person by id.", required=true)
             @PathVariable("id") Long id, @RequestBody PersonVO person) {
-        Boolean enabled = person.getEnabled();
-        PersonVO personVO = service.disablePerson(id, enabled);
+        PersonVO personVO = service.disablePerson(id, person.getEnabled());
         personVO.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
         return personVO;
     }
@@ -62,15 +68,23 @@ public class PersonController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Person.class)))),
             @ApiResponse(responseCode = "404", description = "Persons not found")})
     @GetMapping(produces = { "application/json", "application/xml", "application/x-yaml" })
-    public List<PersonVO> findAll() {
+    public ResponseEntity<PagedResourcesAssembler<PersonVO>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "12") int limit,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction,
+            PagedResourcesAssembler assembler){
 
-        List<PersonVO> persons =  service.findAll();
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
+
+        Page<PersonVO> persons =  service.findAll(pageable);
         persons
                 .forEach(p -> p.add(
                         linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()
                     )
                 );
-        return persons;
+        return new ResponseEntity<PagedResourcesAssembler<PersonVO>>(assembler.toModel(persons), HttpStatus.OK);
     }
 
     @Operation(summary = "Create person", description = "Create person, inform: first and last name, etc", tags = { "person" })
